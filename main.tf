@@ -16,9 +16,9 @@ provider "aws" {
   region  = "us-east-1"
 }
 
-resource "aws_vpc" "ac2_vpc" {
+resource "aws_vpc" "tarea2" {
   cidr_block = "172.23.0.0/26"
-  tags {
-    Name = "ac2_vpc"
+  tags = {
+    Name = "tarea2"
   }
 }
