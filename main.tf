@@ -24,16 +24,16 @@ resource "aws_vpc" "tarea2" {
 }
 
 resource "aws_subnet" "web" {
-  cidr_block = "172.23.0.10/29"
+  cidr_block = "172.23.0.8/29"
   vpc_id = aws_vpc.tarea2.id
 }
 
 resource "aws_subnet" "backend" {
-  cidr_block = "172.23.0.20/29"
+  cidr_block = "172.23.0.16/29"
   vpc_id = aws_vpc.tarea2.id
 }
 
 resource "aws_subnet" "db" {
-  cidr_block = "172.23.0.30/29"
+  cidr_block = "172.23.0.24/29"
   vpc_id = aws_vpc.tarea2.id
 }
