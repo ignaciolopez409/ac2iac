@@ -18,4 +18,7 @@ provider "aws" {
 
 resource "aws_vpc" "tarea2" {
   cidr_block = "172.23.0.0/26"
+  tags = {
+    Name = "vpc_iac"
+  }
 }
