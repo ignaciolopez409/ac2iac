@@ -20,5 +20,5 @@ variable "db_cdir" {
 
 variable "ac2iac_rt_cidr_block" {
   type = string
-  default = "0.0.0.0./0"
+  default = "0.0.0.0/0"
 }
