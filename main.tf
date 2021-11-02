@@ -172,7 +172,7 @@ resource "aws_security_group" "ac2iac_db_security_group" {
 
 resource "aws_key_pair" "ac2iac_ec2_key_pair" {
   key_name = "ac2iac-ec2-key-pair"
-  public_key = file("~/.ssh/id_rsa.pub)"
+  public_key = file("~/.ssh/id_rsa.pub")
   tags = {
     Name = "AC2IAC EC2 Instances Key Pair"
   }
