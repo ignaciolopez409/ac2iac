@@ -77,3 +77,75 @@ resource "aws_route_table_association" "ac2iac_route_table_association_db" {
   subnet_id = aws_subnet.database.id
   route_table_id = aws_default_route_table.ac2iac_default_route_table.id
 }
+
+resource "aws_security_group" "outbound_management_and_validation" {
+  name = "outbound_managenent_and_validation"
+  description = "Security Group que permite acceso 22 para administracion y 80 para validar las instancias"
+  vpc_id = aws_vpc.ac2iac_vpc.id
+  ingress {
+      description = "Management"
+      from_port = "22"
+      to_port = "22"
+      protocol = "tcp"
+      cidr_blocks = [var.ac2iac_rt_cidr_block]
+  }
+  ingress {
+      description = "Validation"
+      from_port = "80"
+      to_port = "80"
+      protocol = "tcp"
+      cidr_blocks = [var.ac2iac_rt_cidr_block]
+    }
+  egress {
+    description = "Outbound rule"
+    from_port = -1
+    to_port = -1
+    protocol = "tcp"
+    cidr_blocks = [var.ac2iac_rt_cidr_block]
+  }
+  tags = {
+    Name = "Outbound Management and Validation SG"
+  }
+}
+
+resource "aws_security_group" "ac2iac_front_security_group" {
+  description = "Security Group EC2 Frontend Instances"
+  vpc_id = aws_vpc.ac2iac_vpc.id
+  egress {
+    description = "Backend outbound connection"
+    from_port = var.application_port
+    protocol = "tcp"
+    to_port = var.application_port
+    cidr_blocks = [var.back_cdir]
+  }
+}
+
+resource "aws_security_group" "ac2iac_back_security_group" {
+  description = "Security Group EC2 Backend Instances"
+  vpc_id = aws_vpc.ac2iac_vpc.id
+  ingress {
+    description = "Frontend inbound connection"
+    from_port = var.application_port
+    protocol = "tcp"
+    to_port = var.application_port
+    cidr_blocks = [var.front_cdir]
+  }
+  egress {
+    from_port = var.database_port
+    protocol = "tcp"
+    to_port = var.database_port
+    cidr_blocks = [var.db_cdir]
+  }
+}
+
+resource "aws_security_group" "ac2iac_db_security_group" {
+  description = "Security Group EC2 Database Instances"
+  vpc_id = aws_vpc.ac2iac_vpc.id
+  ingress {
+    description = "Backend inbound connection"
+    from_port = var.database_port
+    protocol = "tcp"
+    to_port = var.database_port
+    cidr_blocks = [var.back_cdir]
+  }
+}

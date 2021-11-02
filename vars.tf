@@ -22,3 +22,18 @@ variable "ac2iac_rt_cidr_block" {
   type = string
   default = "0.0.0.0/0"
 }
+
+variable "application_port" {
+  type = number
+  default = 8080
+}
+
+variable "database_port" {
+  type = number
+  default = 3306
+}
+
+variable "database_port" {
+  type = number
+  default = 3306
+}
