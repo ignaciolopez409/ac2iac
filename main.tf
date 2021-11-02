@@ -281,7 +281,7 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
       "sudo cp /tmp/mongodb-org-4.2.repo /etc/yum.repos.d/",
       "sudo yum install -y mongodb-org",
       "sudo cp -rf /tmp/mongod.conf /etc/mongod.conf",
-      "sudo systemctl start mongod",
+      "sudo systemctl restart mongod",
       "sudo systemctl enable mongod",
       "sudo yum install -y telnet",
       "sudo rm -rf /tmp/mongod.conf /tmp/mongodb-org-4.2.repo"
