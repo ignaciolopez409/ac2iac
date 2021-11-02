@@ -190,6 +190,16 @@ resource "aws_instance" "ac2iac_ec2_front_instance" {
   tags = {
     Name = "AC2IAC EC2 frontend instance"
   }
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum install -y polkit",
+      "sudo amazon-linux-extras enable httpd_modules",
+      "sudo yum install -y httpd",
+      "sudo systemctl enable httpd",
+      "sudo systemctl start httpd",
+      "sudo yum install -y telnet"
+    ]
+  }
 }
 
 resource "aws_instance" "ac2iac_ec2_back_instance" {
@@ -204,6 +214,16 @@ resource "aws_instance" "ac2iac_ec2_back_instance" {
   tags = {
     Name = "AC2IAC EC2 backend instance"
   }
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum install -y polkit",
+      "sudo amazon-linux-extras enable httpd_modules",
+      "sudo yum install -y httpd",
+      "sudo systemctl enable httpd",
+      "sudo systemctl start httpd",
+      "sudo yum install -y telnet"
+    ]
+  }
 }
 
 resource "aws_instance" "ac2iac_ec2_db_instance" {
@@ -217,5 +237,15 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
   key_name = aws_key_pair.ac2iac_ec2_key_pair.id
   tags = {
     Name = "AC2IAC EC2 database instance"
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum install -y polkit",
+      "sudo amazon-linux-extras enable httpd_modules",
+      "sudo yum install -y httpd",
+      "sudo systemctl enable httpd",
+      "sudo systemctl start httpd",
+      "sudo yum install -y telnet"
+    ]
   }
 }
