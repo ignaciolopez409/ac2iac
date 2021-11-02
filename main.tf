@@ -29,6 +29,7 @@ resource "aws_subnet" "web" {
   cidr_block = var.front_cdir
   vpc_id = aws_vpc.ac2iac_vpc.id
   map_public_ip_on_launch = true
+  availability_zone = "us-east-1a"
   tags = {
     Name = "ac2iac-frontend_network"
   }
@@ -38,6 +39,7 @@ resource "aws_subnet" "backend" {
   cidr_block = var.back_cdir
   vpc_id = aws_vpc.ac2iac_vpc.id
   map_public_ip_on_launch = true
+  availability_zone = "us-east-1a"
   tags = {
     Name = "ac2iac-backend-network"
   }
@@ -47,6 +49,7 @@ resource "aws_subnet" "database" {
   cidr_block = var.db_cdir
   vpc_id = aws_vpc.ac2iac_vpc.id
   map_public_ip_on_launch = true
+  availability_zone = "us-east-1a"
   tags = {
     Name = "ac2iac-database-network"
   }
