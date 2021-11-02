@@ -64,7 +64,6 @@ resource "aws_default_route_table" "ac2iac_default_route_table" {
 }
 
 resource "aws_route_table_association" "ac2iac_route_table_association" {
-  vpc_id = aws_vpc.ac2iac_vpc.id
   subnet_id = [aws_subnet.web.id, aws_subnet.backend.id, aws_subnet.database.id]
   route_table_id = aws_default_route_table.ac2iac_default_route_table.id
 }
