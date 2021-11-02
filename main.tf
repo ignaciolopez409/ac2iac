@@ -231,33 +231,6 @@ resource "aws_instance" "ac2iac_ec2_back_instance" {
   tags = {
     Name = "AC2IAC EC2 backend instance"
   }
-  provisioner "file" {
-    source = "./configuration_files/backend_index.html"
-    destination = "/tmp/index.html"
-    connection {
-      type = "ssh"
-      user = "ec2-user"
-      host = aws_instance.ac2iac_ec2_db_instance.public_ip
-      private_key = file("~/.ssh/id_rsa")
-    }
-  }
-  provisioner "remote-exec" {
-    inline = [
-      "sudo yum install -y polkit",
-      "sudo amazon-linux-extras enable httpd_modules",
-      "sudo yum install -y httpd",
-      "sudo systemctl enable httpd",
-      "sudo cp /tmp/index.html /var/www/html/",
-      "sudo systemctl restart httpd",
-      "sudo yum install -y telnet"
-    ]
-    connection {
-      type = "ssh"
-      user = "ec2-user"
-      host = aws_instance.ac2iac_ec2_back_instance.public_ip
-      private_key = file("~/.ssh/id_rsa")
-    }
-  }
 }
 
 resource "aws_instance" "ac2iac_ec2_db_instance" {
@@ -271,32 +244,5 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
   key_name = aws_key_pair.ac2iac_ec2_key_pair.id
   tags = {
     Name = "AC2IAC EC2 database instance"
-  }
-  provisioner "file" {
-    source = "./configuration_files/database_index.html"
-    destination = "/tmp/index.html"
-    connection {
-      type = "ssh"
-      user = "ec2-user"
-      host = aws_instance.ac2iac_ec2_db_instance.public_ip
-      private_key = file("~/.ssh/id_rsa")
-    }
-  }
-  provisioner "remote-exec" {
-    inline = [
-      "sudo yum install -y polkit",
-      "sudo amazon-linux-extras enable httpd_modules",
-      "sudo yum install -y httpd",
-      "sudo systemctl enable httpd",
-      "sudo cp /tmp/index.html /var/www/html/",
-      "sudo systemctl restart httpd",
-      "sudo yum install -y telnet"
-    ]
-    connection {
-      type = "ssh"
-      user = "ec2-user"
-      host = aws_instance.ac2iac_ec2_db_instance.public_ip
-      private_key = file("~/.ssh/id_rsa")
-    }
   }
 }
