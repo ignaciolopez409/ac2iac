@@ -258,12 +258,6 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
     source = "files/mongo/mongodb-org-4.2.repo"
     destination = "/tmp/mongodb-org-4.2.repo"
   }
-  connection {
-    type = "ssh"
-    user = "ec2-user"
-    host = aws_instance.ac2iac_ec2_db_instance.public_ip
-    private_key = file("~/.ssh/id_rsa")
-  }
   provisioner "file" {
     source = "files/mongo/mongod.conf"
     destination = "/tmp/mongod.conf"
