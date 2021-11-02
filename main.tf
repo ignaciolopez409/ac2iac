@@ -48,11 +48,3 @@ resource "aws_subnet" "database" {
     Name = "database-network"
   }
 }
-
-resource "aws_route_table" "ac2iac_route_table" {
-  vpc_id =  aws_vpc.ac2iac_vpc.id
-  route {
-    cidr_block = var.ac2iac_rt_cidr_block
-    gateway_id = aws_internet_gateway.ac2iac_igw.id
-  }
-}
