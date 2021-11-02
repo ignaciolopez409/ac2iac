@@ -29,7 +29,6 @@ resource "aws_subnet" "web" {
   cidr_block = var.front_cdir
   vpc_id = aws_vpc.ac2iac_vpc.id
   map_public_ip_on_launch = true
-  availability_zone = "us-east-1a"
   tags = {
     Name = "ac2iac-frontend_network"
   }
@@ -39,7 +38,6 @@ resource "aws_subnet" "backend" {
   cidr_block = var.back_cdir
   vpc_id = aws_vpc.ac2iac_vpc.id
   map_public_ip_on_launch = true
-  availability_zone = "us-east-1a"
   tags = {
     Name = "ac2iac-backend-network"
   }
@@ -49,7 +47,6 @@ resource "aws_subnet" "database" {
   cidr_block = var.db_cdir
   vpc_id = aws_vpc.ac2iac_vpc.id
   map_public_ip_on_launch = true
-  availability_zone = "us-east-1a"
   tags = {
     Name = "ac2iac-database-network"
   }
@@ -183,7 +180,6 @@ resource "aws_key_pair" "ac2iac_ec2_key_pair" {
 
 resource "aws_instance" "ac2iac_ec2_front_instance" {
   ami = var.ami_id
-  availability_zone = "us-east-1a"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.web.id
   security_groups = [
@@ -224,8 +220,8 @@ resource "aws_instance" "ac2iac_ec2_front_instance" {
 }
 
 resource "aws_instance" "ac2iac_ec2_back_instance" {
+  depends_on = [aws_instance.ac2iac_ec2_front_instance.provisioner]
   ami = var.ami_id
-  availability_zone = "us-east-1a"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.backend.id
   security_groups = [
@@ -266,8 +262,8 @@ resource "aws_instance" "ac2iac_ec2_back_instance" {
 }
 
 resource "aws_instance" "ac2iac_ec2_db_instance" {
+  depends_on = [aws_instance.ac2iac_ec2_back_instance.provisioner]
   ami = var.ami_id
-  availability_zone = "us-east-1a"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.database.id
   security_groups = [
