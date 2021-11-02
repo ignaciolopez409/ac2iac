@@ -40,7 +40,7 @@ variable "application_port" {
 
 variable "database_port" {
   type = number
-  default = 3306
+  default = 27017
 }
 
 variable "ami_id" {
