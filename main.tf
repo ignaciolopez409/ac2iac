@@ -59,8 +59,3 @@ resource "aws_default_route_table" "ac2iac_default_route_table" {
     Name = "ac2iac_default_route_table"
   }
 }
-
-resource "aws_route_table_association" "ac2iac_route_table_assoc" {
-  subnet_id = [aws_subnet.web.id,aws_subnet.backend.id,aws_subnet.database.id]
-  route_table_id = aws_default_route_table.ac2iac_default_route_table.id
-}
