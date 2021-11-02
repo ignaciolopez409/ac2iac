@@ -179,6 +179,7 @@ resource "aws_key_pair" "ac2iac_ec2_key_pair" {
 }
 
 resource "aws_instance" "ac2iac_ec2_front_instance" {
+  depends_on = [aws_instance.ac2iac_ec2_back_instance]
   ami = var.ami_id
   instance_type = "t2.micro"
   subnet_id = aws_subnet.web.id
@@ -220,7 +221,6 @@ resource "aws_instance" "ac2iac_ec2_front_instance" {
 }
 
 resource "aws_instance" "ac2iac_ec2_back_instance" {
-  depends_on = [aws_instance.ac2iac_ec2_front_instance]
   ami = var.ami_id
   instance_type = "t2.micro"
   subnet_id = aws_subnet.backend.id
@@ -262,7 +262,7 @@ resource "aws_instance" "ac2iac_ec2_back_instance" {
 }
 
 resource "aws_instance" "ac2iac_ec2_db_instance" {
-  depends_on = [aws_instance.ac2iac_ec2_back_instance]
+  depends_on = [aws_instance.ac2iac_ec2_front_instance]
   ami = var.ami_id
   instance_type = "t2.micro"
   subnet_id = aws_subnet.database.id
