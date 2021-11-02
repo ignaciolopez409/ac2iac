@@ -190,24 +190,13 @@ resource "aws_instance" "ac2iac_ec2_front_instance" {
   tags = {
     Name = "AC2IAC EC2 frontend instance"
   }
-  provisioner "file" {
-    source = "./configuration_files/frontend_index.html"
-    destination = "~/index.html"
-    connection {
-      type = "ssh"
-      user = "ec2-user"
-      host = aws_instance.ac2iac_ec2_db_instance.public_ip
-      private_key = file("~/.ssh/id_rsa")
-    }
-  }
   provisioner "remote-exec" {
     inline = [
       "sudo yum install -y polkit",
       "sudo amazon-linux-extras enable httpd_modules",
       "sudo yum install -y httpd",
       "sudo systemctl enable httpd",
-      "sudo sleep 30",
-      "sudo cp ~/index.html /var/www/html/",
+      "sudo echo \"<h1>EC2 Frontend Instance</h1>\" >> /var/www/html/index.html",
       "sudo systemctl restart httpd",
       "sudo yum install -y telnet"
     ]
@@ -248,8 +237,7 @@ resource "aws_instance" "ac2iac_ec2_back_instance" {
       "sudo amazon-linux-extras enable httpd_modules",
       "sudo yum install -y httpd",
       "sudo systemctl enable httpd",
-      "sudo sleep 30",
-      "sudo cp ~/index.html /var/www/html/",
+      "sudo echo \"<h1>EC2 Backend Instance</h1>\" >> /var/www/html/index.html",
       "sudo systemctl restart httpd",
       "sudo yum install -y telnet"
     ]
@@ -274,24 +262,13 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
   tags = {
     Name = "AC2IAC EC2 database instance"
   }
-  provisioner "file" {
-    source = "./configuration_files/database_index.html"
-    destination = "~/index.html"
-    connection {
-      type = "ssh"
-      user = "ec2-user"
-      host = aws_instance.ac2iac_ec2_db_instance.public_ip
-      private_key = file("~/.ssh/id_rsa")
-    }
-  }
   provisioner "remote-exec" {
     inline = [
       "sudo yum install -y polkit",
       "sudo amazon-linux-extras enable httpd_modules",
       "sudo yum install -y httpd",
       "sudo systemctl enable httpd",
-      "sudo sleep 30",
-      "sudo cp ~/index.html /var/www/html/",
+      "sudo echo \"<h1>EC2 Database Instance</h1>\" >> /var/www/html/index.html",
       "sudo systemctl restart httpd",
       "sudo yum install -y telnet"
     ]
