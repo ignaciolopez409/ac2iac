@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket = "ac2-terraform-states"
     key    = "iac/terraform.tfstate"
-    region = "us-east-1"
+    region = var.region
   }
   required_providers {
     aws = {
@@ -168,4 +168,34 @@ resource "aws_security_group" "ac2iac_db_security_group" {
   tags = {
     Name = "Security Group EC2 Database Instances"
   }
+}
+
+resource "aws_instance" "ac2iac_ec2_front_instance" {
+  ami = "ami-01cc34ab2709337aa"
+  instance_type = "t2.micro"
+  subnet_id = aws_subnet.web.id
+  security_groups = [
+    aws_security_group.outbound_management_and_validation,
+    aws_security_group.ac2iac_front_security_group.id
+  ]
+}
+
+resource "aws_instance" "ac2iac_ec2_back_instance" {
+  ami = "ami-01cc34ab2709337aa"
+  instance_type = "t2.micro"
+  subnet_id = aws_subnet.backend.id
+  security_groups = [
+    aws_security_group.outbound_management_and_validation,
+    aws_security_group.ac2iac_back_security_group.id
+  ]
+}
+
+resource "aws_instance" "ac2iac_ec2_db_instance" {
+  ami = "ami-01cc34ab2709337aa"
+  instance_type = "t2.micro"
+  subnet_id = aws_subnet.database.id
+  security_groups = [
+    aws_security_group.outbound_management_and_validation,
+    aws_security_group.ac2iac_db_security_group.id
+  ]
 }
