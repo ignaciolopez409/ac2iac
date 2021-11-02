@@ -206,6 +206,10 @@ resource "aws_instance" "ac2iac_ec2_front_instance" {
       private_key = file("~/.ssh/id_rsa")
     }
   }
+  provisioner "file" {
+    source = "./configuration_files/frontend_index.html"
+    destination = "/var/www/html/index.html"
+  }
 }
 
 resource "aws_instance" "ac2iac_ec2_back_instance" {
@@ -236,6 +240,10 @@ resource "aws_instance" "ac2iac_ec2_back_instance" {
       private_key = file("~/.ssh/id_rsa")
     }
   }
+  provisioner "file" {
+    source = "./configuration_files/backend_index.html"
+    destination = "/var/www/html/index.html"
+  }
 }
 
 resource "aws_instance" "ac2iac_ec2_db_instance" {
@@ -265,5 +273,9 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
       host = aws_instance.ac2iac_ec2_db_instance.public_ip
       private_key = file("~/.ssh/id_rsa")
     }
+  }
+  provisioner "file" {
+    source = "./configuration_files/database_index.html"
+    destination = "/var/www/html/index.html"
   }
 }
