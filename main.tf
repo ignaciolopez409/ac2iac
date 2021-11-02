@@ -14,14 +14,14 @@ terraform {
 resource "aws_vpc" "ac2iac_vpc" {
   cidr_block = var.vpc_cidr
   tags = {
-    Name = "ac2iac_vpc"
+    Name = "ac2iac-vpc"
   }
 }
 
 resource "aws_internet_gateway" "ac2iac_igw" {
   vpc_id =  aws_vpc.ac2iac_vpc.id
   tags = {
-    Name = "ac2iac_igw"
+    Name = "ac2iac-igw"
   }
 }
 
@@ -30,7 +30,7 @@ resource "aws_subnet" "web" {
   vpc_id = aws_vpc.ac2iac_vpc.id
   map_public_ip_on_launch = true
   tags = {
-    Name = "frontend_network"
+    Name = "ac2iac-frontend_network"
   }
 }
 
@@ -39,7 +39,7 @@ resource "aws_subnet" "backend" {
   vpc_id = aws_vpc.ac2iac_vpc.id
   map_public_ip_on_launch = true
   tags = {
-    Name = "backend-network"
+    Name = "ac2iac-backend-network"
   }
 }
 
@@ -48,7 +48,7 @@ resource "aws_subnet" "database" {
   vpc_id = aws_vpc.ac2iac_vpc.id
   map_public_ip_on_launch = true
   tags = {
-    Name = "database-network"
+    Name = "ac2iac-database-network"
   }
 }
 
