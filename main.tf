@@ -63,7 +63,17 @@ resource "aws_default_route_table" "ac2iac_default_route_table" {
   }
 }
 
-resource "aws_route_table_association" "ac2iac_route_table_association" {
-  subnet_id = [aws_subnet.web.id, aws_subnet.backend.id, aws_subnet.database.id]
+resource "aws_route_table_association" "ac2iac_route_table_association_web" {
+  subnet_id = aws_subnet.web.id
+  route_table_id = aws_default_route_table.ac2iac_default_route_table.id
+}
+
+resource "aws_route_table_association" "ac2iac_route_table_association_back" {
+  subnet_id = aws_subnet.backend.id
+  route_table_id = aws_default_route_table.ac2iac_default_route_table.id
+}
+
+resource "aws_route_table_association" "ac2iac_route_table_association_db" {
+  subnet_id = aws_subnet.database.id
   route_table_id = aws_default_route_table.ac2iac_default_route_table.id
 }
