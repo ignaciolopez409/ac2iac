@@ -112,7 +112,7 @@ resource "aws_security_group" "ac2iac_front_security_group" {
   name = "ac2iac_front_security_group"
   description = "Security Group EC2 Frontend Instances"
   vpc_id = aws_vpc.ac2iac_vpc.id
-  ingress { ##Ingres creado para permitir acceso a front end en caso de eliminar el SG outbound_management_and_validation que permite el acceso 80 y 22
+  ingress {
     description = "Web server ingress"
     from_port = var.http_port
     protocol = "tcp"
