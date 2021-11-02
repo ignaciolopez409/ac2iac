@@ -203,7 +203,7 @@ resource "aws_instance" "ac2iac_ec2_front_instance" {
       type = "ssh"
       user = "ec2-user"
       host = aws_instance.ac2iac_ec2_front_instance.public_ip
-      private_key = file("/root/.ssh/id_rsa")
+      private_key = file("~/.ssh/id_rsa")
     }
   }
 }
@@ -233,7 +233,7 @@ resource "aws_instance" "ac2iac_ec2_back_instance" {
       type = "ssh"
       user = "ec2-user"
       host = aws_instance.ac2iac_ec2_back_instance.public_ip
-      private_key = file("/root/.ssh/id_rsa")
+      private_key = file("~/.ssh/id_rsa")
     }
   }
 }
@@ -263,7 +263,7 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
       type = "ssh"
       user = "ec2-user"
       host = aws_instance.ac2iac_ec2_db_instance.public_ip
-      private_key = file("/root/.ssh/id_rsa")
+      private_key = file("~/.ssh/id_rsa")
     }
   }
 }
