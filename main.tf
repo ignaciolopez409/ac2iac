@@ -83,21 +83,21 @@ resource "aws_security_group" "outbound_management_and_validation" {
   description = "Security Group que permite acceso 22 para administracion y 80 para validar las instancias"
   vpc_id = aws_vpc.ac2iac_vpc.id
   ingress {
-      description = "Management"
+      description = "Management ingress"
       from_port = "22"
       to_port = "22"
       protocol = "tcp"
       cidr_blocks = [var.ac2iac_rt_cidr_block]
   }
   ingress {
-      description = "Validation"
+      description = "Validation ingress"
       from_port = "80"
       to_port = "80"
       protocol = "tcp"
       cidr_blocks = [var.ac2iac_rt_cidr_block]
     }
   egress {
-    description = "Outbound rule"
+    description = "Egress rule"
     from_port = 0
     to_port = 0
     protocol = -1
@@ -109,8 +109,16 @@ resource "aws_security_group" "outbound_management_and_validation" {
 }
 
 resource "aws_security_group" "ac2iac_front_security_group" {
+  name = "ac2iac_front_security_group"
   description = "Security Group EC2 Frontend Instances"
   vpc_id = aws_vpc.ac2iac_vpc.id
+  ingress { ##Ingres creado para permitir acceso a front end en caso de eliminar el SG outbound_management_and_validation que permite el acceso 80 y 22
+    description = "Web server ingress"
+    from_port = 0
+    protocol = "tcp"
+    to_port = 80
+    cidr_blocks = [var.ac2iac_rt_cidr_block]
+  }
   egress {
     description = "Backend outbound connection"
     from_port = var.application_port
@@ -118,34 +126,46 @@ resource "aws_security_group" "ac2iac_front_security_group" {
     to_port = var.application_port
     cidr_blocks = [var.back_cdir]
   }
+  tags = {
+    Name = "Security Group EC2 Frontend Instances"
+  }
 }
 
 resource "aws_security_group" "ac2iac_back_security_group" {
+  name = "ac2iac_back_security_group"
   description = "Security Group EC2 Backend Instances"
   vpc_id = aws_vpc.ac2iac_vpc.id
   ingress {
-    description = "Frontend inbound connection"
+    description = "Allow frontend ingress connection"
     from_port = var.application_port
     protocol = "tcp"
     to_port = var.application_port
     cidr_blocks = [var.front_cdir]
   }
   egress {
+    description = "Allow database egress connection"
     from_port = var.database_port
     protocol = "tcp"
     to_port = var.database_port
     cidr_blocks = [var.db_cdir]
   }
+  tags = {
+    Name = "Security Group EC2 Backend Instances"
+  }
 }
 
 resource "aws_security_group" "ac2iac_db_security_group" {
+  name = "ac2iac_db_security_group"
   description = "Security Group EC2 Database Instances"
   vpc_id = aws_vpc.ac2iac_vpc.id
   ingress {
-    description = "Backend inbound connection"
+    description = "Allow Backend ingress connection"
     from_port = var.database_port
     protocol = "tcp"
     to_port = var.database_port
     cidr_blocks = [var.back_cdir]
+  }
+  tags = {
+    Name = "Security Group EC2 Database Instances"
   }
 }
