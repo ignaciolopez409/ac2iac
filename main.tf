@@ -256,7 +256,7 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
   }
   provisioner "file" {
     source = "files/mongo/mongodb-org-4.2.repo"
-    destination = "/etc/yum.repos.d/mongodb-org-4.2.repo"
+    destination = "/tmp/mongodb-org-4.2.repo"
   }
   connection {
     type = "ssh"
@@ -273,6 +273,8 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
       "sudo chmod 777 /var/www/html",
       "sudo echo \"<h1>EC2 Database Instance</h1>\" | tee -a /var/www/html/index.html",
       "sudo systemctl restart httpd",
+      "sudo chmod 777 /etc/yum.repos.d",
+      "sudo cp /tmp/mongodb-org-4.2.repo /etc/yum.repos.d/",
       "sudo yum install -y mongodb-org",
       "sudo yum install -y telnet"
     ]
