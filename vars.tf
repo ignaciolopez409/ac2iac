@@ -32,8 +32,3 @@ variable "database_port" {
   type = number
   default = 3306
 }
-
-variable "database_port" {
-  type = number
-  default = 3306
-}
