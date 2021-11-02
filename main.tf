@@ -55,4 +55,7 @@ resource "aws_route_table" "ac2iac_route_table" {
     cidr_block = var.ac2iac_rt_cidr_block
     gateway_id = aws_internet_gateway.ac2iac_igw.id
   }
+  tags = {
+    Name = "ac2iac_route_table"
+  }
 }
