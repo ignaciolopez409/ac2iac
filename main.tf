@@ -273,7 +273,7 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
       "sudo chmod 777 /var/www/html",
       "sudo echo \"<h1>EC2 Database Instance</h1>\" | tee -a /var/www/html/index.html",
       "sudo systemctl restart httpd",
-      "sudo yum install -y mongodb-org"
+      "sudo yum install -y mongodb-org",
       "sudo yum install -y telnet"
     ]
     connection {
