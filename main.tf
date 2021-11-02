@@ -264,6 +264,16 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
     host = aws_instance.ac2iac_ec2_db_instance.public_ip
     private_key = file("~/.ssh/id_rsa")
   }
+  provisioner "file" {
+    source = "files/mongo/mongod.conf"
+    destination = "/tmp/mongod.conf"
+  }
+  connection {
+    type = "ssh"
+    user = "ec2-user"
+    host = aws_instance.ac2iac_ec2_db_instance.public_ip
+    private_key = file("~/.ssh/id_rsa")
+  }
   provisioner "remote-exec" {
     inline = [
       "sudo yum install -y polkit",
@@ -276,9 +286,11 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
       "sudo chmod 777 /etc/yum.repos.d",
       "sudo cp /tmp/mongodb-org-4.2.repo /etc/yum.repos.d/",
       "sudo yum install -y mongodb-org",
+      "sudo cp -rf /tmp/mongod.conf /etc/mongod.conf",
       "sudo systemctl start mongod",
       "sudo systemctl enable mongod",
-      "sudo yum install -y telnet"
+      "sudo yum install -y telnet",
+      "sudo rm -rf /tmp/mongod.conf /tmp/mongodb-org-4.2.repo"
     ]
     connection {
       type = "ssh"
