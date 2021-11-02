@@ -25,7 +25,7 @@ resource "aws_internet_gateway" "ac2iac_igw" {
   }
 }
 
-resource "aws_subnet" "web" {
+resource "aws_subnet" "frontend" {
   cidr_block = var.front_cdir
   vpc_id = aws_vpc.ac2iac_vpc.id
   map_public_ip_on_launch = true
@@ -64,7 +64,7 @@ resource "aws_default_route_table" "ac2iac_default_route_table" {
 }
 
 resource "aws_route_table_association" "ac2iac_route_table_association_web" {
-  subnet_id = aws_subnet.web.id
+  subnet_id = aws_subnet.frontend.id
   route_table_id = aws_default_route_table.ac2iac_default_route_table.id
 }
 
@@ -178,119 +178,29 @@ resource "aws_key_pair" "ac2iac_ec2_key_pair" {
   }
 }
 
-resource "aws_instance" "ac2iac_ec2_front_instance" {
-  ami = var.ami_id
-  instance_type = "t2.micro"
-  subnet_id = aws_subnet.web.id
-  security_groups = [
-    aws_security_group.outbound_management_and_validation.id,
-    aws_security_group.ac2iac_front_security_group.id
-  ]
+module "frontend" {
+  source = "./modules/frontend"
+  ami_id = var.ami_id
+  instance_type = var.instance_type
+  subnet_id = aws_subnet.frontend.id
+  security_groups = [aws_security_group.outbound_management_and_validation.id, aws_security_group.ac2iac_front_security_group.id]
   key_name = aws_key_pair.ac2iac_ec2_key_pair.id
-  tags = {
-    Name = "AC2IAC EC2 frontend instance"
-  }
-  provisioner "remote-exec" {
-    inline = [
-      "sudo yum install -y polkit",
-      "sudo amazon-linux-extras enable httpd_modules",
-      "sudo yum install -y httpd",
-      "sudo systemctl enable httpd",
-      "sudo chmod 777 /var/www/html",
-      "sudo echo \"<h1>EC2 Frontend Instance</h1>\" | tee -a /var/www/html/index.html",
-      "sudo systemctl restart httpd",
-      "sudo yum install -y telnet"
-    ]
-    connection {
-      type = "ssh"
-      user = "ec2-user"
-      host = aws_instance.ac2iac_ec2_front_instance.public_ip
-      private_key = file("~/.ssh/id_rsa")
-    }
-  }
 }
 
-resource "aws_instance" "ac2iac_ec2_back_instance" {
-  ami = var.ami_id
-  instance_type = "t2.micro"
+module "backend" {
+  source = "./modules/backend"
+  ami_id = var.ami_id
+  instance_type = var.instance_type
   subnet_id = aws_subnet.backend.id
-  security_groups = [
-    aws_security_group.outbound_management_and_validation.id,
-    aws_security_group.ac2iac_back_security_group.id
-  ]
+  security_groups = [aws_security_group.outbound_management_and_validation.id, aws_security_group.ac2iac_back_security_group.id]
   key_name = aws_key_pair.ac2iac_ec2_key_pair.id
-  tags = {
-    Name = "AC2IAC EC2 backend instance"
-  }
-  provisioner "remote-exec" {
-    inline = [
-      "sudo yum install -y polkit",
-      "sudo amazon-linux-extras enable httpd_modules",
-      "sudo yum install -y httpd",
-      "sudo systemctl enable httpd",
-      "sudo chmod 777 /var/www/html",
-      "sudo echo \"<h1>EC2 Backend Instance</h1>\" | tee -a /var/www/html/index.html",
-      "sudo systemctl restart httpd",
-      "sudo yum install -y telnet"
-    ]
-    connection {
-      type = "ssh"
-      user = "ec2-user"
-      host = aws_instance.ac2iac_ec2_back_instance.public_ip
-      private_key = file("~/.ssh/id_rsa")
-    }
-  }
 }
 
-resource "aws_instance" "ac2iac_ec2_db_instance" {
-  ami = var.ami_id
-  instance_type = "t2.micro"
+module "database" {
+  source = "./modules/database"
+  ami_id = var.ami_id
+  instance_type = var.instance_type
   subnet_id = aws_subnet.database.id
-  security_groups = [
-    aws_security_group.outbound_management_and_validation.id,
-    aws_security_group.ac2iac_db_security_group.id
-  ]
+  security_groups = [aws_security_group.outbound_management_and_validation.id, aws_security_group.ac2iac_db_security_group.id]
   key_name = aws_key_pair.ac2iac_ec2_key_pair.id
-  tags = {
-    Name = "AC2IAC EC2 database instance"
-  }
-  provisioner "file" {
-    source = "files/mongo/mongodb-org-4.2.repo"
-    destination = "/tmp/mongodb-org-4.2.repo"
-  }
-  provisioner "file" {
-    source = "files/mongo/mongod.conf"
-    destination = "/tmp/mongod.conf"
-  }
-  connection {
-    type = "ssh"
-    user = "ec2-user"
-    host = aws_instance.ac2iac_ec2_db_instance.public_ip
-    private_key = file("~/.ssh/id_rsa")
-  }
-  provisioner "remote-exec" {
-    inline = [
-      "sudo yum install -y polkit",
-      "sudo amazon-linux-extras enable httpd_modules",
-      "sudo yum install -y httpd",
-      "sudo systemctl enable httpd",
-      "sudo chmod 777 /var/www/html",
-      "sudo echo \"<h1>EC2 Database Instance</h1>\" | tee -a /var/www/html/index.html",
-      "sudo systemctl restart httpd",
-      "sudo chmod 777 /etc/yum.repos.d",
-      "sudo cp /tmp/mongodb-org-4.2.repo /etc/yum.repos.d/",
-      "sudo yum install -y mongodb-org",
-      "sudo cp -rf /tmp/mongod.conf /etc/mongod.conf",
-      "sudo systemctl restart mongod",
-      "sudo systemctl enable mongod",
-      "sudo yum install -y telnet",
-      "sudo rm -rf /tmp/mongod.conf /tmp/mongodb-org-4.2.repo"
-    ]
-    connection {
-      type = "ssh"
-      user = "ec2-user"
-      host = aws_instance.ac2iac_ec2_db_instance.public_ip
-      private_key = file("~/.ssh/id_rsa")
-    }
-  }
 }
