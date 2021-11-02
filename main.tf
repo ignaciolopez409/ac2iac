@@ -175,7 +175,7 @@ resource "aws_instance" "ac2iac_ec2_front_instance" {
   instance_type = "t2.micro"
   subnet_id = aws_subnet.web.id
   security_groups = [
-    aws_security_group.outbound_management_and_validation,
+    aws_security_group.outbound_management_and_validation.id,
     aws_security_group.ac2iac_front_security_group.id
   ]
 }
@@ -185,7 +185,7 @@ resource "aws_instance" "ac2iac_ec2_back_instance" {
   instance_type = "t2.micro"
   subnet_id = aws_subnet.backend.id
   security_groups = [
-    aws_security_group.outbound_management_and_validation,
+    aws_security_group.outbound_management_and_validation.id,
     aws_security_group.ac2iac_back_security_group.id
   ]
 }
