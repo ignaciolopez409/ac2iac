@@ -28,6 +28,7 @@ resource "aws_internet_gateway" "ac2iac_igw" {
 resource "aws_subnet" "web" {
   cidr_block = var.front_cdir
   vpc_id = aws_vpc.ac2iac_vpc.id
+  map_public_ip_on_launch = true
   tags = {
     Name = "frontend_network"
   }
@@ -36,6 +37,7 @@ resource "aws_subnet" "web" {
 resource "aws_subnet" "backend" {
   cidr_block = var.back_cdir
   vpc_id = aws_vpc.ac2iac_vpc.id
+  map_public_ip_on_launch = true
   tags = {
     Name = "backend-network"
   }
@@ -44,6 +46,7 @@ resource "aws_subnet" "backend" {
 resource "aws_subnet" "database" {
   cidr_block = var.db_cdir
   vpc_id = aws_vpc.ac2iac_vpc.id
+  map_public_ip_on_launch = true
   tags = {
     Name = "database-network"
   }
@@ -58,4 +61,10 @@ resource "aws_default_route_table" "ac2iac_default_route_table" {
   tags = {
     Name = "ac2iac_default_route_table"
   }
+}
+
+resource "aws_route_table_association" "ac2iac_route_table_association" {
+  vpc_id = aws_vpc.ac2iac_vpc.id
+  subnet_id = [aws_subnet.web.id, aws_subnet.backend.id, aws_subnet.database.id]
+  route_table_id = aws_default_route_table.ac2iac_default_route_table.id
 }
