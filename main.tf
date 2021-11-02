@@ -195,7 +195,7 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
   instance_type = "t2.micro"
   subnet_id = aws_subnet.database.id
   security_groups = [
-    aws_security_group.outbound_management_and_validation,
+    aws_security_group.outbound_management_and_validation.id,
     aws_security_group.ac2iac_db_security_group.id
   ]
 }
