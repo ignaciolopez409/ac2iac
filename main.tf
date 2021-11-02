@@ -84,15 +84,15 @@ resource "aws_security_group" "outbound_management_and_validation" {
   vpc_id = aws_vpc.ac2iac_vpc.id
   ingress {
       description = "Management ingress"
-      from_port = "22"
-      to_port = "22"
+      from_port = 22
+      to_port = 22
       protocol = "tcp"
       cidr_blocks = [var.ac2iac_rt_cidr_block]
   }
   ingress {
       description = "Validation ingress"
-      from_port = "80"
-      to_port = "80"
+      from_port = 80
+      to_port = 80
       protocol = "tcp"
       cidr_blocks = [var.ac2iac_rt_cidr_block]
     }
@@ -114,7 +114,7 @@ resource "aws_security_group" "ac2iac_front_security_group" {
   vpc_id = aws_vpc.ac2iac_vpc.id
   ingress { ##Ingres creado para permitir acceso a front end en caso de eliminar el SG outbound_management_and_validation que permite el acceso 80 y 22
     description = "Web server ingress"
-    from_port = 0
+    from_port = 80
     protocol = "tcp"
     to_port = 80
     cidr_blocks = [var.ac2iac_rt_cidr_block]
