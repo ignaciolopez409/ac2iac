@@ -196,6 +196,7 @@ resource "aws_instance" "ac2iac_ec2_front_instance" {
       "sudo amazon-linux-extras enable httpd_modules",
       "sudo yum install -y httpd",
       "sudo systemctl enable httpd",
+      "sudo chmod 777 /var/www/html",
       "sudo echo \"<h1>EC2 Frontend Instance</h1>\" | tee -a /var/www/html/index.html",
       "sudo systemctl restart httpd",
       "sudo yum install -y telnet"
@@ -227,6 +228,7 @@ resource "aws_instance" "ac2iac_ec2_back_instance" {
       "sudo amazon-linux-extras enable httpd_modules",
       "sudo yum install -y httpd",
       "sudo systemctl enable httpd",
+      "sudo chmod 777 /var/www/html",
       "sudo echo \"<h1>EC2 Backend Instance</h1>\" | tee -a /var/www/html/index.html",
       "sudo systemctl restart httpd",
       "sudo yum install -y telnet"
@@ -258,6 +260,7 @@ resource "aws_instance" "ac2iac_ec2_db_instance" {
       "sudo amazon-linux-extras enable httpd_modules",
       "sudo yum install -y httpd",
       "sudo systemctl enable httpd",
+      "sudo chmod 777 /var/www/html",
       "sudo echo \"<h1>EC2 Database Instance</h1>\" | tee -a /var/www/html/index.html",
       "sudo systemctl restart httpd",
       "sudo yum install -y telnet"
