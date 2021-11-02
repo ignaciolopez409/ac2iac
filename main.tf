@@ -84,15 +84,15 @@ resource "aws_security_group" "outbound_management_and_validation" {
   vpc_id = aws_vpc.ac2iac_vpc.id
   ingress {
       description = "Management ingress"
-      from_port = 22
-      to_port = 22
+      from_port = var.ssh_port
+      to_port = var.ssh_port
       protocol = "tcp"
       cidr_blocks = [var.ac2iac_rt_cidr_block]
   }
   ingress {
       description = "Validation ingress"
-      from_port = 80
-      to_port = 80
+      from_port = var.http_port
+      to_port = var.http_port
       protocol = "tcp"
       cidr_blocks = [var.ac2iac_rt_cidr_block]
     }
@@ -114,9 +114,9 @@ resource "aws_security_group" "ac2iac_front_security_group" {
   vpc_id = aws_vpc.ac2iac_vpc.id
   ingress { ##Ingres creado para permitir acceso a front end en caso de eliminar el SG outbound_management_and_validation que permite el acceso 80 y 22
     description = "Web server ingress"
-    from_port = 80
+    from_port = var.http_port
     protocol = "tcp"
-    to_port = 80
+    to_port = var.http_port
     cidr_blocks = [var.ac2iac_rt_cidr_block]
   }
   egress {
@@ -170,32 +170,52 @@ resource "aws_security_group" "ac2iac_db_security_group" {
   }
 }
 
+resource "aws_key_pair" "ac2iac_ec2_key_pair" {
+  key_name = "ac2iac-ec2-key-pair"
+  public_key = var.ec2_key_pair
+  tags = {
+    Name = "AC2IAC EC2 Instances Key Pair"
+  }
+}
+
 resource "aws_instance" "ac2iac_ec2_front_instance" {
-  ami = "ami-01cc34ab2709337aa"
+  ami = var.ami_id
   instance_type = "t2.micro"
   subnet_id = aws_subnet.web.id
   security_groups = [
     aws_security_group.outbound_management_and_validation.id,
     aws_security_group.ac2iac_front_security_group.id
   ]
+  key_name = aws_key_pair.ac2iac_ec2_key_pair.id
+  tags = {
+    Name = "AC2IAC EC2 frontend instance"
+  }
 }
 
 resource "aws_instance" "ac2iac_ec2_back_instance" {
-  ami = "ami-01cc34ab2709337aa"
+  ami = var.ami_id
   instance_type = "t2.micro"
   subnet_id = aws_subnet.backend.id
   security_groups = [
     aws_security_group.outbound_management_and_validation.id,
     aws_security_group.ac2iac_back_security_group.id
   ]
+  key_name = aws_key_pair.ac2iac_ec2_key_pair.id
+  tags = {
+    Name = "AC2IAC EC2 backend instance"
+  }
 }
 
 resource "aws_instance" "ac2iac_ec2_db_instance" {
-  ami = "ami-01cc34ab2709337aa"
+  ami = var.ami_id
   instance_type = "t2.micro"
   subnet_id = aws_subnet.database.id
   security_groups = [
     aws_security_group.outbound_management_and_validation.id,
     aws_security_group.ac2iac_db_security_group.id
   ]
+  key_name = aws_key_pair.ac2iac_ec2_key_pair.id
+  tags = {
+    Name = "AC2IAC EC2 database instance"
+  }
 }
