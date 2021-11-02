@@ -220,7 +220,7 @@ resource "aws_instance" "ac2iac_ec2_front_instance" {
 }
 
 resource "aws_instance" "ac2iac_ec2_back_instance" {
-  depends_on = [aws_instance.ac2iac_ec2_front_instance.provisioner]
+  depends_on = [aws_instance.ac2iac_ec2_front_instance]
   ami = var.ami_id
   instance_type = "t2.micro"
   subnet_id = aws_subnet.backend.id
@@ -262,7 +262,7 @@ resource "aws_instance" "ac2iac_ec2_back_instance" {
 }
 
 resource "aws_instance" "ac2iac_ec2_db_instance" {
-  depends_on = [aws_instance.ac2iac_ec2_back_instance.provisioner]
+  depends_on = [aws_instance.ac2iac_ec2_back_instance]
   ami = var.ami_id
   instance_type = "t2.micro"
   subnet_id = aws_subnet.database.id
