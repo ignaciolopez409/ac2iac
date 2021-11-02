@@ -221,16 +221,6 @@ resource "aws_instance" "ac2iac_ec2_back_instance" {
   tags = {
     Name = "AC2IAC EC2 backend instance"
   }
-  provisioner "file" {
-    source = "./configuration_files/backend_index.html"
-    destination = "~/index.html"
-    connection {
-      type = "ssh"
-      user = "ec2-user"
-      host = aws_instance.ac2iac_ec2_db_instance.public_ip
-      private_key = file("~/.ssh/id_rsa")
-    }
-  }
   provisioner "remote-exec" {
     inline = [
       "sudo yum install -y polkit",
