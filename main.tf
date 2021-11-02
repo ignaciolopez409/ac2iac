@@ -180,6 +180,7 @@ resource "aws_key_pair" "ac2iac_ec2_key_pair" {
 
 resource "aws_instance" "ac2iac_ec2_front_instance" {
   ami = var.ami_id
+  availability_zone = "us-east-1a"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.web.id
   security_groups = [
@@ -221,6 +222,7 @@ resource "aws_instance" "ac2iac_ec2_front_instance" {
 
 resource "aws_instance" "ac2iac_ec2_back_instance" {
   ami = var.ami_id
+  availability_zone = "us-east-1a"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.backend.id
   security_groups = [
@@ -262,6 +264,7 @@ resource "aws_instance" "ac2iac_ec2_back_instance" {
 
 resource "aws_instance" "ac2iac_ec2_db_instance" {
   ami = var.ami_id
+  availability_zone = "us-east-1a"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.database.id
   security_groups = [
