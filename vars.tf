@@ -43,11 +43,6 @@ variable "database_port" {
   default = 3306
 }
 
-variable "ec2_key_pair" {
-  type = string
-  default = file("~/.ssh/id_rsa.pub")
-}
-
 variable "ami_id" {
   type = string
   default = "ami-01cc34ab2709337aa"
