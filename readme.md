@@ -10,6 +10,6 @@ En el repositorio se encuentra la definición de la infraestructura solicitada p
     * Backend: Acceso puerto 8080 desde subred de frontend, salida puerto 27017 a subred de base de datos.
     * Database: Acceso puerto 27017 desde subred de backend.
 
-En cada instancia se configuró un servidor web para validar que estan correctos los accesos (no requerido pero sugerencia de Mauricio)
+En cada instancia se configuró un servidor web para validar que estan correctos los accesos (no requerido pero fue sugerencia en clase), la instancia de base de datos tiene instalado y configurado MongoDB.
 
 La infraestructura implementada simula un servidor Apache en la instancia frontend, una instancia backend donde se ejecutaría la aplicación y una base de datos MongoDB interactuando con el backend de la aplicación. 
