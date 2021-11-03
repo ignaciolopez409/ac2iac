@@ -1,8 +1,10 @@
 **AC2IaC**
 
+https://github.com/ignaciolopez409/ac2iac.git
+
 En el repositorio se encuentra la definición de la infraestructura solicitada para la tarea.
 
-* En el archivo main.tf ubicado en la raíz del repositorio se detalla la creacíón de los recursos solicitados, VPC, IGW,  subredes, tablas de ruteo y sus correspondientes asociaciones, security groups, instancias. Las instancias están definidas como módulos.
+* En el archivo main.tf ubicado en la raíz del repositorio se detalla la creacíón de los recursos solicitados, VPC, IGW,  subredes, tablas de ruteo y sus correspondientes asociaciones, security groups, instancias. Las instancias están definidas como módulos. Adicionalmente hay un directorio files, el cual contiene los archivos necesarios tanto para instalar MongoDD como para configurarlo.
 
   * Se creó un security group que permite el acceso http para validaciones y ssh para realizar las configuraciones mediante terraform remote-exec (este SG se podría eliminar una vez configuradas las instancias).
   * Cada instancia tiene asociado un security group el cual permite solamente el acceso y salida solicitado en la tarea
